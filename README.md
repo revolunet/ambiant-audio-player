@@ -14,7 +14,7 @@ It use [pygame](http://pygame.org) and in-memory sounds to be extra-reactive, ev
 
 ## Setup
 
-`pip install ambiant-audio-player`
+`pip install git+https://github.com/revolunet/ambiant-audio-player.git`
 
 edit [config.py](./config.py.sample) and run `python -m ambiant-audio-player`
 
