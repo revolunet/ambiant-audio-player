@@ -1,0 +1,10 @@
+# where to store cached files
+cache_dir = './cache'
+# url to preload a bunch of files
+cache_preload_url = './preload.json'
+# the background loop volume
+default_loop_volume = 0.6
+# the background loop volume when another sound is playing
+default_loop_volume_low = 0.1
+# default played sounds volume
+default_sound_volume = 1
