@@ -5,32 +5,47 @@ import json
 import logging
 import base64
 from bottle import run, route
+import timeit
 
 import config
 import utils
 from Room import Room
 
-FORMAT = '%(asctime)-15s %(levelname)-6s %(message)s'
-logging.basicConfig(format=FORMAT)
-
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
+FORMAT = '%(asctime)-15s %(levelname)-6s %(module)-8s %(message)s'
+logging.basicConfig(format=FORMAT, level=logging.DEBUG)
 
 SUCCESS = {'success': True}
 ERROR = {'success': False}
 
+
+class Timer(object):
+    def __init__(self, title):
+        self.title = title
+    def __enter__(self):
+        self.start_time = timeit.default_timer()
+        return self
+    def __exit__(self, *args):
+        elapsed = timeit.default_timer() - self.start_time
+        logging.info('%s duration : %ss', self.title, elapsed)
+
+
+
 def start():
-    log.info('starting player')
+    logging.info('starting player')
     if not os.path.isdir(config.cache_dir):
         os.makedirs(config.cache_dir)
-    player_files = utils.init_cache()
+
+    with Timer('init_cache') as t:
+        player_files = utils.init_cache()
+
     # start pygame
-    room = Room(loop_url=player_files.get('loop'))
+    with Timer('Room.init') as t:
+        room = Room(loop_url=player_files.get('loop'))
 
     @route('/cache')
     def cache():
         ''' list cached sounds '''
-        log.info('API:cache')
+        logging.info('API:cache')
         def decode(path):
             begin, ext = os.path.splitext(path)
             begin = begin[begin.rfind('/') + 1:]
@@ -42,12 +57,12 @@ def start():
     @route('/sound/<sound_url:path>')
     def sound(sound_url):
         ''' play any sound on this device '''
-        log.info('API:sound %s', sound_url)
+        logging.info('API:sound %s', sound_url)
         room.play_sound(sound_url, lower_loop_volume = True)
         return SUCCESS
 
     # start bottle server
-    log.info('server started')
+    logging.info('server started')
     run(host='0.0.0.0', port=8080)
 
 

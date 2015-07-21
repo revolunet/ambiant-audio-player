@@ -10,15 +10,9 @@ from uuid import getnode as get_mac
 
 import config
 
-FORMAT = '%(asctime)-15s %(levelname)-6s %(message)s'
-logging.basicConfig(format=FORMAT)
-
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
 
 def get_unique_path(string):
     ''' convert a path string into a md5, keeping the original extension '''
-    print 'get_unique_path', string
     path, ext = os.path.splitext(string)
     return '{0}{1}'.format(
         base64.b64encode(string),
@@ -48,7 +42,7 @@ def get_player_files(url):
         elif url:
             return json.load(open(url, 'r'))
     except Exception, e:
-        print 'ERROR on get_files_to_cache', e
+        logging.exception('ERROR on get_files_to_cache : %s', e)
 
     return {
         "loop": None,
@@ -57,7 +51,7 @@ def get_player_files(url):
 
 def cache_urls(urls):
     if not urls:
-        log.warning('No file to cache')
+        logging.warning('No file to cache')
         return
     if isinstance(urls, basestring):
         urls = [urls]
@@ -65,18 +59,18 @@ def cache_urls(urls):
         if url:
             destination = url_to_local_path(url)
             if os.path.isfile(destination):
-                log.debug('file %s already cached locally', url)
+                logging.debug('file %s already cached locally', url)
             else:
-                log.debug('download %s for caching', url)
+                logging.debug('download %s for caching', url)
                 try:
                     download(url, destination)
                 except Exception, e:
-                    log.error('cant download %s for caching (%s)', url, e.message[0])
+                    logging.error('cant download %s for caching (%s)', url, e.message[0])
                 else:
-                    log.debug('downloaded %s successfully', url)
+                    logging.debug('downloaded %s successfully', url)
 
 def init_cache():
     player_files = get_player_files(config.cache_preload_url)
-    urls_to_cache = [player_files.get('loop')] + player_files.get('sounds')
+    urls_to_cache = [player_files.get('loop')] + player_files.get('sounds', [])
     cache_urls(urls_to_cache)
     return player_files
