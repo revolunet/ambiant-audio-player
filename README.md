@@ -1,5 +1,5 @@
 
-# ambiant-audio-player
+# ambiantplayer
 
 Audio player for in-stores sound-system that offers a simple HTTP API to play on-demand sounds.
 
@@ -14,13 +14,13 @@ It use [pygame](http://pygame.org) and in-memory sounds to be extra-reactive, ev
 
 ## Setup
 
-`pip install git+https://github.com/revolunet/ambiant-audio-player.git`
+`pip install git+https://github.com/revolunet/ambiantplayer.git`
 
-edit [config.py](./config.py.sample) and run `python -m ambiant-audio-player`
+edit [config.py](./config.py.sample) and run `python -m ambiantplayer`
 
 ## Usage
 
-Just run `python -m ambiant-audio-player`.
+Just run `python -m ambiantplayer`.
 It will read config from `config.py`.
 
 ### Preload config (optional)
