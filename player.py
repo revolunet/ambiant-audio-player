@@ -4,7 +4,7 @@ import os
 import json
 import logging
 import base64
-from bottle import run, route
+from bottle import run, route, static_file
 import timeit
 
 import config
@@ -54,12 +54,14 @@ def start():
 
         return json.dumps(keys)
 
-    @route('/sound/<sound_url:path>')
-    def sound(sound_url):
+    @route('/play/<sound_url:path>')
+    def play(sound_url):
         ''' play any sound on this device '''
         logging.info('API:sound %s', sound_url)
         room.play_sound(sound_url, lower_loop_volume = True)
-        return SUCCESS
+        # return empty pixel to satisify browsers using image.src
+        # todo: return response when application/json header
+        return static_file('pixel.gif', '.')
 
     # start bottle server
     logging.info('server started')
