@@ -32,7 +32,7 @@ class ReadOnlyException(Exception):
 
 def download(url, out_path):
     ''' download and save a binary '''
-    if os.access(out_path, os.W_OK):
+    if os.access(os.path.dirname(out_path), os.W_OK):
         response = requests.get(url, stream=True)
         with open(out_path, 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
