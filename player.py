@@ -28,12 +28,13 @@ class Timer(object):
         elapsed = timeit.default_timer() - self.start_time
         logging.info('%s duration : %ss', self.title, elapsed)
 
-
-
 def start():
     logging.info('starting player')
     if not os.path.isdir(config.cache_dir):
-        os.makedirs(config.cache_dir)
+        if os.access(config.cache_dir, os.W_OK):
+            os.makedirs(config.cache_dir)
+        else:
+            logging.error('START:skip create cache directory (r/o FS)')
 
     with Timer('init_cache') as t:
         player_files = utils.init_cache()

@@ -14,7 +14,7 @@ It use [pygame](http://pygame.org) and in-memory sounds to be extra-reactive, ev
 
 ## Setup
 
-`pip install git+https://github.com/revolunet/ambiantplayer.git`
+`git clone https://github.com/revolunet/ambiantplayer.git`
 
 edit [config.py](./config.py.sample) and run `python -m ambiantplayer`
 

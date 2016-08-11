@@ -4,9 +4,15 @@ import os
 import logging
 import time
 import pygame
+import io
 
 import config
 import utils
+import urllib
+try:
+    from urllib2 import urlopen
+except ImportError:
+    from urllib.request import urlopen
 
 # sounds[relative_path] = pygame.mixer.Sound(fullname)
 
@@ -25,12 +31,11 @@ class Room(object):
             self.loop_channel = self.play_sound(loop_url, volume=config.default_loop_volume, loops=-1)
 
     def preload_sound(self, local_path):
-        sound = None
-        if local_path.endswith('.ogg') and not local_path in self.sounds:
+        if os.path.isfile(local_path) and local_path.endswith('.ogg') and not local_path in self.sounds:
             logging.debug('preload sound %s', local_path)
             sound = pygame.mixer.Sound(local_path)
             self.sounds[local_path] = sound
-        return self.sounds.get(local_path)
+            return self.sounds.get(local_path)
 
     def preload_sounds(self):
         ''' preload cache_dir/*.ogg in memory fo faster play '''
@@ -59,8 +64,14 @@ class Room(object):
         # check if sound cached and download if not
         utils.cache_urls(sound_url)
         local_path = utils.url_to_local_path(sound_url)
-        # load sound in pygame
+
         sound = self.preload_sound(local_path)
+
+        if not os.path.isfile(local_path):
+            fixed_url = sound_url[:sound_url.rfind('/')+1] + urllib.quote(sound_url[sound_url.rfind('/')+1:])
+            soundfile = urlopen(fixed_url).read()
+            sound = pygame.mixer.Sound(io.BytesIO(soundfile))
+            self.sounds[local_path] = sound
 
         if sound:
             # reduce loop volume

@@ -27,12 +27,19 @@ def url_to_local_path(url):
     ''' return local path for a given url '''
     return os.path.join(config.cache_dir, get_unique_path(url))
 
+class ReadOnlyException(Exception):
+    pass
+
 def download(url, out_path):
     ''' download and save a binary '''
-    response = requests.get(url, stream=True)
-    with open(out_path, 'wb') as out_file:
-        shutil.copyfileobj(response.raw, out_file)
-    del response
+    if os.access(out_path, os.W_OK):
+        response = requests.get(url, stream=True)
+        with open(out_path, 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+        del response
+        return out_path
+    else:
+        raise ReadOnlyException()
 
 def get_player_files(url):
     try:
@@ -64,13 +71,18 @@ def cache_urls(urls):
                 logging.debug('download %s for caching', url)
                 try:
                     download(url, destination)
+                except ReadOnlyException:
+                    logging.error('Download: Skip (r/o FS)')
                 except Exception, e:
-                    logging.error('cant download %s for caching (%s)', url, e.message[0])
+                    logging.error('cant download %s for caching (%s)', url, e)
                 else:
                     logging.debug('downloaded %s successfully', url)
 
 def init_cache():
     player_files = get_player_files(config.cache_preload_url)
     urls_to_cache = [player_files.get('loop')] + player_files.get('sounds', [])
-    cache_urls(urls_to_cache)
+    if os.access(config.cache_dir, os.W_OK):
+        cache_urls(urls_to_cache)
+    else:
+        logging.error('START:skip init cache directory (r/o FS)')
     return player_files
