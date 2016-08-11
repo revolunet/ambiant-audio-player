@@ -1,7 +1,10 @@
+import sys
+
+cache_preload_url = len(sys.argv) and sys.argv[1] or None
+
 # where to store cached files
 cache_dir = './cache'
-# url to preload a bunch of files
-cache_preload_url = './preload.json'
+
 # the background loop volume
 default_loop_volume = 0.6
 # the background loop volume when another sound is playing

@@ -6,6 +6,7 @@ import logging
 import requests
 import shutil
 import json
+import platform
 from uuid import getnode as get_mac
 
 import config
@@ -22,6 +23,10 @@ def get_unique_path(string):
 def get_mac_address():
     ''' return properly formatted MAC address '''
     return ':'.join(("%012X" % get_mac())[i:i+2] for i in range(0, 12, 2))
+
+def get_hostname():
+    ''' return hostname '''
+    return platform.node()
 
 def url_to_local_path(url):
     ''' return local path for a given url '''
@@ -44,7 +49,7 @@ def download(url, out_path):
 def get_player_files(url):
     try:
         if url.startswith('http'):
-            r = requests.get('{0}?mac={1}'.format(url, get_mac_address()) )
+            r = requests.get('{0}?hostname={1}&mac={2}'.format(url, get_hostname(), get_mac_address()) )
             return r.json()
         elif url:
             return json.load(open(url, 'r'))
@@ -80,9 +85,16 @@ def cache_urls(urls):
 
 def init_cache():
     player_files = get_player_files(config.cache_preload_url)
-    urls_to_cache = [player_files.get('loop')] + player_files.get('sounds', [])
-    if os.access(config.cache_dir, os.W_OK):
-        cache_urls(urls_to_cache)
-    else:
-        logging.error('START:skip init cache directory (r/o FS)')
+    player_files_sounds = player_files.get('sounds', [])
+    urls_to_cache = []
+    if isinstance(player_files_sounds, list):
+        urls_to_cache = [player_files.get('loop')] + player_files.get('sounds', [])
+    if not os.path.isdir(config.cache_dir):
+        if os.access(os.path.dirname(config.cache_dir), os.W_OK):
+            os.makedirs(config.cache_dir)
+    cache_urls(urls_to_cache)
+    # if os.access(config.cache_dir, os.W_OK):
+    #     cache_urls(urls_to_cache)
+    # else:
+    #     logging.error('START:skip init cache directory (r/o FS)')
     return player_files

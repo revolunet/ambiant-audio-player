@@ -35,7 +35,7 @@ class Room(object):
             logging.debug('preload sound %s', local_path)
             sound = pygame.mixer.Sound(local_path)
             self.sounds[local_path] = sound
-            return self.sounds.get(local_path)
+        return self.sounds.get(local_path)
 
     def preload_sounds(self):
         ''' preload cache_dir/*.ogg in memory fo faster play '''
@@ -80,11 +80,11 @@ class Room(object):
                 time.sleep(0.5)
 
             # play sound channel
-            if sound:
-                channel = sound.play(loops = loops)
-                # adjust sound volume
-                #if loops != -1:
-                channel.set_volume(volume)
+         #   if sound:
+            channel = sound.play(loops = loops)
+            # adjust sound volume
+            #if loops != -1:
+            channel.set_volume(volume)
 
             # restore loop volume
             if lower_loop_volume:
