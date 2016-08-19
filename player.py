@@ -66,7 +66,7 @@ def start():
 
     # start bottle server
     logging.info('server started')
-    run(host='0.0.0.0', port=8080)
+    run(host='0.0.0.0', port=config.port or 8080)
 
 
 if __name__=='__main__':
