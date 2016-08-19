@@ -1,10 +1,10 @@
 import sys
 
-cache_preload_url = len(sys.argv) and sys.argv[1] or None
+cache_preload_url = len(sys.argv) > 1 and sys.argv[1] or ''
 
 # where to store cached files
 cache_dir = './cache'
-
+port = 8082
 # the background loop volume
 default_loop_volume = 0.6
 # the background loop volume when another sound is playing
