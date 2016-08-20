@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+cd /home/prizoners/ambiantplayer
+
+sleep 10
+
+screen -AdmS player -t home
+screen -S player -X screen -t init sh -c 'ipe-rw; python init-cache.py http://192.168.0.10:9500/ambiant/sounds; ipe-ro; python player.py http://192.168.0.10:9500/ambiant/sounds; exec bash'
+
+exit 0
