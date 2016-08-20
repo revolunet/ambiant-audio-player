@@ -6,8 +6,8 @@ cache_preload_url = len(sys.argv) > 1 and sys.argv[1] or ''
 cache_dir = './cache'
 port = 8082
 # the background loop volume
-default_loop_volume = 0.6
+default_loop_volume = 0.4
 # the background loop volume when another sound is playing
 default_loop_volume_low = 0.1
 # default played sounds volume
-default_sound_volume = 1
+default_sound_volume = 0.8
