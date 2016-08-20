@@ -16,7 +16,7 @@ def get_unique_path(string):
     ''' convert a path string into a md5, keeping the original extension '''
     path, ext = os.path.splitext(string)
     return '{0}{1}'.format(
-        base64.b64encode(string),
+        base64.b64encode(string.encode('utf-8')),
         ext
     )
 
