@@ -89,8 +89,15 @@ class Room(object):
             # restore loop volume
             if lower_loop_volume:
                 if channel:
+                    max_timeout = 6
+                    start = 0
                     while channel.get_busy():
+                        # prevent some weird freezes
+                        if loops == 0 and start >= max_timeout:
+                            sound.stop()
+                            break
                         time.sleep(0.5)
+                        start = start + 0.5
                 self.set_loop_volume(config.default_loop_volume)
         else:
             logging.error('cannot play sound %s', sound_url)
