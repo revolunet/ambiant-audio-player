@@ -89,7 +89,7 @@ class Room(object):
             # restore loop volume
             if lower_loop_volume:
                 if channel:
-                    max_timeout = 6
+                    max_timeout = sound.get_length() + 5
                     start = 0
                     while channel.get_busy():
                         # prevent some weird freezes
