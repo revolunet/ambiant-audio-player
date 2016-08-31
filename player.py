@@ -112,4 +112,4 @@ if __name__ == '__main__':
       log.exception(e)
 
   log.info('RUNNING on port 8082')
-  run(host='0.0.0.0', port=8082)
+  run(host='0.0.0.0', port=8082, server='cherrypy')
