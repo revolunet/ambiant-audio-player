@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import logging
+import urllib
 import urllib2
 from cStringIO import StringIO
 import pygame
@@ -77,10 +78,14 @@ def play_url(url):
 # SERVER
 #
 
+def fix_path(sound_path):
+  parts = sound_path.split('/')
+  return '/'.join(parts[:-1]) + '/' + urllib.pathname2url(parts[-1])
+
 @route('/play/<sound:path>')
 def play(sound):
     log.info('play sound {0}'.format(sound))
-    play_url(sound)
+    play_url(fix_path(sound))
     return static_file('pixel.gif', '.')
 
 
