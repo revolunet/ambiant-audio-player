@@ -2,7 +2,7 @@
 
 cd `dirname "$0"`
 
-FILES="requirements.txt player.py"
+FILES="requirements.txt player.py start.sh pixel.gif"
 DEST_PATH="/root/simpleplayer/"
 
 function sync() {

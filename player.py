@@ -8,7 +8,7 @@ import urllib2
 from cStringIO import StringIO
 import pygame
 
-from bottle import route, run
+from bottle import route, run, static_file
 
 
 SUCCESS = {'success': True}
@@ -17,6 +17,8 @@ ERROR = {'success': False}
 LOOP_VOLUME_HIGH     = 0.4
 LOOP_VOLUME_LOW      = 0.15 # while another sound is playing
 FX_VOLUME            = 0.7
+
+HTTP_TIMEOUT         = 60
 
 # logging setup
 FORMAT = '%(asctime)s %(levelname)s %(name)s: %(message)s'
@@ -31,7 +33,7 @@ loop_sound = None
 fx_sound = None
 
 def get_sound_from_url(url):
-  return StringIO(urllib2.urlopen(url, timeout=30).read())
+  return StringIO(urllib2.urlopen(url, timeout=HTTP_TIMEOUT).read())
 
 def play_sound(url, loops=0, volume=None, on_ready=None):
   log.info('play_sound #{0} {1}'.format(loops, url))
@@ -47,6 +49,7 @@ def play_sound(url, loops=0, volume=None, on_ready=None):
 
 def start_loop(url):
   global loop_sound
+  log.info('start loop {0}'.format(url))
   loop_sound = play_sound(url, loops=-1, volume=LOOP_VOLUME_HIGH)
 
 def set_loop_volume(volume):
@@ -78,7 +81,7 @@ def play_url(url):
 def play(sound):
     log.info('play sound {0}'.format(sound))
     play_url(sound)
-    return SUCCESS
+    return static_file('pixel.gif', '.')
 
 
 @route('/debug')
@@ -103,5 +106,5 @@ if __name__ == '__main__':
       log.exception('invalid loop_url ' + loop_url)
       log.exception(e)
 
-  log.info('RUNNING on port 8080')
-  run(host='0.0.0.0', port=8080)
+  log.info('RUNNING on port 8082')
+  run(host='0.0.0.0', port=8082)
