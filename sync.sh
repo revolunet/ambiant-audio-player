@@ -1,13 +1,16 @@
 #!/bin/sh
 
-FILES="requirements.txt rc.local config.py.sample init-cache.py Room.py player.py utils.py pixel.gif"
-DEST_PATH="/home/ju/ambiantplayer/"
+cd `dirname "$0"`
+
+FILES="requirements.txt player.py"
+DEST_PATH="/root/simpleplayer/"
 
 function sync() {
-  DEST=$1
-  ssh $DEST ipe-rw
-  rsync -v $FILES $DEST:$DEST_PATH
-  ssh $DEST ipe-ro
+  TARGET=$1
+  ssh $TARGET ipe-rw
+  rsync -v $FILES $TARGET:$DEST_PATH
+  scp rc.local $TARGET:/etc/rc.local
+  ssh $TARGET ipe-ro
 }
 
 sync $1
