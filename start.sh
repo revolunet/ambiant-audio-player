@@ -4,7 +4,7 @@ cd `dirname "$0"`
 
 HOSTNAME=`hostname`
 
-URL="http://127.0.0.1:9500/getloop?hostname=$HOSTNAME"
+URL="http://192.168.0.10:9500/getloop?hostname=$HOSTNAME"
 
 echo "GETTING LOOP FROM $URL"
 
