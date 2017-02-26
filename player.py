@@ -15,9 +15,9 @@ from bottle import route, run, static_file
 SUCCESS = {'success': True}
 ERROR = {'success': False}
 
-LOOP_VOLUME_HIGH     = 0.4
-LOOP_VOLUME_LOW      = 0.15 # while another sound is playing
-FX_VOLUME            = 0.7
+LOOP_VOLUME_HIGH     = 0.5
+LOOP_VOLUME_LOW      = 0 # while another sound is playing
+FX_VOLUME            = 1
 
 HTTP_TIMEOUT         = 60
 
@@ -51,6 +51,9 @@ def play_sound(url, loops=0, volume=None, on_ready=None):
 def start_loop(url):
   global loop_sound
   log.info('start loop {0}'.format(url))
+  if loop_sound:
+    loop_sound.stop()
+    loop_sound = None
   loop_sound = play_sound(url, loops=-1, volume=LOOP_VOLUME_HIGH)
 
 def set_loop_volume(volume):
@@ -60,11 +63,16 @@ def set_loop_volume(volume):
     loop_sound.set_volume(volume)
 
 def play_url(url):
+  global fx_sound
   log.info('play_url {0}'.format(url))
 
   def on_ready():
     set_loop_volume(LOOP_VOLUME_LOW)
     time.sleep(1)
+
+  if fx_sound:
+    fx_sound.stop()
+
   fx_sound = play_sound(url, volume=FX_VOLUME, on_ready=on_ready)
 
   # wait end before changing sound again
@@ -86,6 +94,12 @@ def fix_path(sound_path):
 def play(sound):
     log.info('play sound {0}'.format(sound))
     play_url(fix_path(sound))
+    return static_file('pixel.gif', '.')
+
+@route('/loop/<sound:path>')
+def loop(sound):
+    log.info('loop sound {0}'.format(sound))
+    start_loop(fix_path(sound))
     return static_file('pixel.gif', '.')
 
 
