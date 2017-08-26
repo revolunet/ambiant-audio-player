@@ -1,6 +1,0 @@
-include Room.py
-include utils.py
-include LICENSE
-include README.md
-include config.py.sample
-include requirements.txt

@@ -12,10 +12,17 @@ Based on [pygame](http://pygame.org), works nicely with [raspberry PI](https://w
 
 :bulb: If you're looking for a full-featured, battle-tested music server, go checkout [MOPIDY](https://github.com/mopidy/mopidy)
 
-## Usage
+## Install
 
- - clone the project
- - run `python player.py /path/to/some/loop.ogg` to start playing a loop
+ - [download](https://github.com/revolunet/httpaudioplayer/archive/master.zip) the project
+ - `pip install -r requirements.txt`
+
+Run with `python player.py /path/to/some/loop.ogg`
+
+## Auto start
+
+ - add `/home/pi/httpaudioplayer/start.sh &` to `/etc/rc.local`
+ - use `screen -x` to get the player session
 
 ### HTTP API
 
@@ -30,12 +37,6 @@ I had to install a 32bit python version to make pygame work for some reason.
 
 So from OSX i start it with `python2-32 player.py`
 
-### AutoStart
-
-See example `start.sh` script that use GNU screen.
-
-
 ### Todo
- - auto-start script
  - support other file types
  - caching/pre-heat

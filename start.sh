@@ -4,11 +4,9 @@ cd `dirname "$0"`
 
 HOSTNAME=`hostname`
 
-URL="http://192.168.0.10:9500/getloop?hostname=$HOSTNAME"
+URL="http://192.168.10.10:9500/getloop?hostname=$HOSTNAME"
 
 echo "GETTING LOOP FROM $URL"
 
-while true; do
-  python ./player.py $URL
-  sleep 5
-done;
+screen -AdmS player -t home
+screen -S player -X screen -t init sh -c 'python player.py $URL ; exec bash'

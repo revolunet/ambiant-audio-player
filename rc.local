@@ -3,9 +3,6 @@
 
 sleep 5
 
-cd /root/simpleplayer
-
-screen -AdmS player -t home
-screen -S player -X screen -t init /root/simpleplayer/start.sh
+/home/pi/httpaudioplayer/start.sh &
 
 exit 0
