@@ -19,7 +19,7 @@ LOOP_VOLUME_HIGH     = 0.5
 LOOP_VOLUME_LOW      = 0 # while another sound is playing
 FX_VOLUME            = 1
 
-HTTP_TIMEOUT         = 60
+HTTP_TIMEOUT         = 30
 
 # logging setup
 FORMAT = '%(asctime)s %(levelname)s %(name)s: %(message)s'
