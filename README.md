@@ -8,7 +8,7 @@ Based on [pygame](http://pygame.org), works nicely with [raspberry PI](https://w
 
  - Play local/remote OGG files on-demand
  - Play a background sound loop
- - Expose sound control HTTP API on http://0.0.0.0:8080
+ - Expose sound control HTTP API on http://0.0.0.0:8082
 
 :bulb: If you're looking for a full-featured, battle-tested music server, go checkout [MOPIDY](https://github.com/mopidy/mopidy)
 

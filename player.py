@@ -1,5 +1,12 @@
 # -*- encoding: UTF-8 -*-
 
+#
+#
+# - **GET `/play/http://sounds.com/example.ogg`**      : download and play
+# - **GET `/loop/http://sounds.com/example-loop.ogg`** : download and play this sound as loop
+#
+#
+
 import os
 import sys
 import time
@@ -33,13 +40,22 @@ log = logging.getLogger(__name__)
 loop_sound = None
 fx_sound = None
 
+# cache to speed up next plays
+CACHE={}
+
 def get_sound_from_url(url):
-  return StringIO(urllib2.urlopen(url, timeout=HTTP_TIMEOUT).read())
+  return (urllib2.urlopen(url, timeout=HTTP_TIMEOUT).read())
 
 def play_sound(url, loops=0, volume=None, on_ready=None):
   log.info('play_sound #{0} {1}'.format(loops, url))
-  sound_data = get_sound_from_url(url)
-  sound = pygame.mixer.Sound(sound_data)
+  key = url
+
+  if not key in CACHE:
+    sound = pygame.mixer.Sound(StringIO(get_sound_from_url(url)))
+    CACHE[key] = sound
+
+  sound = CACHE.get(key)
+
   if on_ready:
     on_ready()
   if volume:
@@ -68,14 +84,14 @@ def play_url(url):
 
   def on_ready():
     set_loop_volume(LOOP_VOLUME_LOW)
-    time.sleep(1)
+    time.sleep(0.5)
 
   if fx_sound:
     fx_sound.stop()
 
   fx_sound = play_sound(url, volume=FX_VOLUME, on_ready=on_ready)
 
-  # wait end before changing sound again
+  # wait end before changing sound again (prevent overlaps)
   wait_timeout = min(100, fx_sound.get_length())
   log.info('wait {0}'.format(wait_timeout))
   time.sleep(wait_timeout)
